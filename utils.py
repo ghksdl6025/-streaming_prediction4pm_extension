@@ -236,6 +236,45 @@ def averaged_prediction(bin_result_list):
         answer = None
     return answer
 
+def time_decaying_prediction(bin_result_list):
+    '''
+    Get single prediction value by bin result list considering time decaying
+
+    Parameters
+    ----------
+    bin_result_list: list
+        List of predicted values of the bin
+    
+    Return
+    ----------
+    The most frequent singe value in arg max value from bin_result_list
+    '''
+    if len(bin_result_list) == 0:
+        answer = None
+    else:
+        importance_granular = 1/len(bin_result_list)
+        result_decaying_dict = {}
+
+        for s in set(bin_result_list):
+            result_decaying_dict[s] =0
+        
+        previous_importance = 0
+        latest_label = 0
+        for r in bin_result_list:
+            current_importance = previous_importance+importance_granular
+            result_decaying_dict[r] += current_importance
+
+            previous_importance = current_importance
+            latest_label = r
+        
+        sorted_result_dict = sorted(result_decaying_dict.items(), key= (lambda x:x[1]),reverse=True)
+        answer = sorted_result_dict[0][0]
+        if len(sorted_result_dict) >=2:
+            if sorted_result_dict[0][1] == sorted_result_dict[1][1]:
+                answer = latest_label
+
+    return answer
+
 
 def get_ts_bin_list(current_ts, next_ts, bin_n):
     '''
@@ -311,17 +350,25 @@ def ts_averaged_prediction_by_bin(bin_list, event_prediction):
     return bin_result_dict
 
 
-def pl_case_continuous_evaluation(resultdict):
+def pl_case_continuous_evaluation(resultdict, type='average'):
     bin_pred = {}
     y_true = {}
     for case in resultdict.keys():
         if len(resultdict[case]) > 2:
-            for event in range(1,len(resultdict[case])-1):
-                bin_result_list = [x[0] for x in resultdict[case][event].predicted.values()]
-                bin_predicted_value = averaged_prediction(bin_result_list)
-                if bin_predicted_value != None:
-                    y_true[str(case)+'_'+str(event+1)] = resultdict[case][event].true_label
-                    bin_pred[str(case)+'_'+str(event+1)] = bin_predicted_value
+            if type =='average':
+                for event in range(1,len(resultdict[case])-1):
+                    bin_result_list = [x[0] for x in resultdict[case][event].predicted.values()]
+                    bin_predicted_value = averaged_prediction(bin_result_list)
+                    if bin_predicted_value != None:
+                        y_true[str(case)+'_'+str(event+1)] = resultdict[case][event].true_label
+                        bin_pred[str(case)+'_'+str(event+1)] = bin_predicted_value
+            elif type =='time_decaying':
+                 for event in range(1,len(resultdict[case])-1):
+                    bin_result_list = [x[0] for x in resultdict[case][event].predicted.values()]
+                    bin_predicted_value = time_decaying_prediction(bin_result_list)
+                    if bin_predicted_value != None:
+                        y_true[str(case)+'_'+str(event+1)] = resultdict[case][event].true_label
+                        bin_pred[str(case)+'_'+str(event+1)] = bin_predicted_value               
     return y_true, bin_pred
 
 
