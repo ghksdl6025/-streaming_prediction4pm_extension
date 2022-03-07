@@ -230,10 +230,16 @@ def averaged_prediction(bin_result_list):
     ----------
     The most frequent singe value in arg max value from bin_result_list
     '''
-    try:
-        answer =sorted(Counter(bin_result_list).items(),key = (lambda x:x[1]),reverse=True)[0][0] 
-    except:
+    if len(bin_result_list) == 0:
         answer = None
+
+    else:
+        sorted_result_dict = sorted(Counter(bin_result_list).items(), key= (lambda x:x[1]),reverse=True)
+        answer = sorted_result_dict[0][0]
+        if len(sorted_result_dict) >=2:
+            if sorted_result_dict[0][1] == sorted_result_dict[1][1]:
+                answer = bin_result_list[-1]
+
     return answer
 
 def time_decaying_prediction(bin_result_list):
