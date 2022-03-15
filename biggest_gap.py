@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 
-datalabsel_list = ['bpic15', 'synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 'synthetic_log_bc1c2', 'bpic17',]
-for counter in [50,100,200]:
+datalabsel_list = ['bpic17',]
+for counter in [50,200]:
     for classifier in ['htc', 'hatc', 'efdt']:
         for datalabel in datalabsel_list:
             df = pd.read_csv('./img/%s/%s result%s.csv'%(datalabel, classifier, counter))
