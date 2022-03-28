@@ -417,24 +417,47 @@ def rt_case_continuous_evaluation(resultdict, bin_n):
                 bin_pred[str(case)+'_'+str(each_bin[2]+1)]= t[each_bin]
     return y_true, bin_pred
 
+
+from sklearn import metrics
+
 class window_evaluation:
-    def __init__(self, window_size):
+    def __init__(self, window_size,type='Accuracy'):
         self.acc_window_savings =[]
         self.acc_window=[]
         self.window_size = window_size
-    
-    def calculate_acc(self):
-        counting_true = 0
+        self.type = type
+
+    def calculate_acc(self, type='Accuracy'):
+        yt_list = []
+        yp_list = []
+
         for yt, yp in self.acc_window:
-            if yt ==yp:
-                counting_true +=1
-        return counting_true / len(self.acc_window)
+            if yt is None or yp is None:
+                continue
+            else:
+                yt_list.append(yt)
+                yp_list.append(yp)
+        
+        if type =='Accuracy':
+            value = metrics.accuracy_score(yt_list, yp_list)
+        elif type =='F1':
+            value = metrics.f1_score(yt_list, yp_list)
+        elif type =='ROCAUC':
+
+            try:
+                value = metrics.roc_auc_score(yt_list, yp_list)
+            except:
+                value = 0
+        elif type =='WeightedF1':
+            value = metrics.f1_score(yt_list, yp_list, average='weighted')
+
+        return value
 
     def update(self,yt,yp):
         if len(self.acc_window) >= self.window_size:
             self.acc_window.pop(0)
         self.acc_window.append((yt,yp))
-        self.acc_window_savings.append(self.calculate_acc())
+        self.acc_window_savings.append(self.calculate_acc(type=self.type))
     
     def invoke_acc_savings(self):
         return self.acc_window_savings
