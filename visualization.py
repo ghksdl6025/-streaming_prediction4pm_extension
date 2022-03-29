@@ -50,7 +50,7 @@ import pandas as pd
 datalabsel_list = ['synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 'synthetic_log_bc1c2', 'bpic17', 'bpic15']
 figure(figsize=(12,8,))
 
-for counter in [50,100,200]:
+for counter in [50,200]:
     for classifier in ['htc', 'hatc', 'efdt']:
         for datalabel in datalabsel_list:
             with open('./dataset_parameters.json','r') as json_file:

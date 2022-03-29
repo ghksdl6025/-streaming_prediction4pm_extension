@@ -4,16 +4,16 @@ from collections import deque
 import numpy as np
 import os 
 
-datalabsel_list = ['bpic17']
+datalabsel_list = ['synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 'synthetic_log_bc1c2','bpic17', 'bpic15']
 
 # classifier = 'htc'
 # counter = 200
-
+performance_measure = 'WeightedF1'
 for counter in [50,100,200]:
     for classifier in ['htc', 'hatc', 'efdt']:
 
         for datalabel in datalabsel_list:
-            with open('./result/%s/%s %s window 50.pkl'%(datalabel, datalabel, classifier) ,'rb') as result_file:
+            with open('./result/%s/%s %s window 50 %s.pkl'%(datalabel, datalabel, classifier, performance_measure) ,'rb') as result_file:
                 data = pkl.load(result_file)
 
             
@@ -56,11 +56,11 @@ for counter in [50,100,200]:
             df['Time'] = time
 
 
-            with open('./result/%s/%s %s window 50 window_acc.pkl'%(datalabel, datalabel, classifier) ,'rb') as result_file:
+            with open('./result/%s/%s %s window 50 window_%s.pkl'%(datalabel, datalabel, classifier, performance_measure) ,'rb') as result_file:
                 data = pkl.load(result_file)
 
             for t in data.keys():
-                print(t)
+
                 if 'prefix_' in t:
 
                     df.loc[:,t] = data[t]
@@ -68,12 +68,13 @@ for counter in [50,100,200]:
             end_signal = len(df)
             df.loc[end_signal, 'Time'] = time[-1] + pd.Timedelta(minutes=1)
             df.loc[end_signal, 'Normality'] = True
-
+            
             try:
-                os.makedirs('./img/%s'%(datalabel))
+                os.makedirs('./img/%s/%s/%s'%(datalabel, classifier, performance_measure))
             except:
                 pass
             
             print(df.head)
 
-            df.to_csv('./img/%s/%s result%s.csv'%(datalabel, classifier, counter), index=False)
+            df.to_csv('./img/%s/%s/%s %s result%s.csv'%(datalabel, classifier, classifier, performance_measure, counter), index=False)
+

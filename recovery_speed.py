@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
-
+import os
 
 
 resultdict = {}
 
+performance_measure = 'WeightedF1'
 
 for x in ['Dataset','Classifier','Window size', 'Frequency of drop','Total drops per Month','Average recovery speed', 'Normalized recovery speed',
         'Max performance drop','Average performance drop','Stability of performance']:
@@ -16,7 +17,7 @@ for counter in [50,200]:
 
     for classifier in ['htc', 'hatc', 'efdt']:
         for datalabel in datalabsel_list:
-            df = pd.read_csv('./img/%s/%s result%s.csv'%(datalabel, classifier, counter))
+            df = pd.read_csv('./img/%s/%s/%s %s result%s.csv'%(datalabel, classifier, classifier, performance_measure, counter))
             df['Time'] = pd.to_datetime(df['Time'])
 
             previous_label = True
@@ -86,5 +87,11 @@ for counter in [50,200]:
 df= pd.DataFrame.from_dict(resultdict)
 df = df.sort_values(by='Dataset')
 print(df)
-df.to_csv('./evaluation metrics.csv',index=False)
+
+try:
+    os.makedirs('./metrics/')
+except:
+    pass
+
+df.to_csv('./metrics/%s evaluation metrics.csv'%(performance_measure),index=False)
 

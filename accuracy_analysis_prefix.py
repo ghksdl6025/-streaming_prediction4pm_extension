@@ -9,11 +9,12 @@ datalabsel_list = ['synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 
 # classifier = 'htc'
 # counter = 200
 
+performance_measure = 'WeightedF1'
 for counter in [50,100,200]:
     for classifier in ['htc', 'hatc', 'efdt']:
 
         for datalabel in datalabsel_list:
-            with open('./result/%s/%s %s window 50 window_acc.pkl'%(datalabel, datalabel, classifier) ,'rb') as result_file:
+            with open('./result/%s/%s %s window 50 window_%s.pkl'%(datalabel, datalabel, classifier, performance_measure) ,'rb') as result_file:
                 data = pkl.load(result_file)
 
             for t in data.keys():
@@ -66,10 +67,10 @@ for counter in [50,100,200]:
                 df.loc[end_signal, 'Normality'] = True
 
                 try:
-                    os.makedirs('./img/%s/%s'%(datalabel, classifier))
+                    os.makedirs('./img/%s/%s/%s'%(datalabel, classifier, performance_measure))
                 except:
                     pass
                 
                 print(df.head)
 
-                df.to_csv('./img/%s/%s/result%s prefix%s.csv'%(datalabel, classifier, counter, prefix), index=False)
+                df.to_csv('./img/%s/%s/%s/result%s prefix%s.csv'%(datalabel, classifier, performance_measure, counter, prefix), index=False)
