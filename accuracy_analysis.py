@@ -4,12 +4,12 @@ from collections import deque
 import numpy as np
 import os 
 
-datalabsel_list = ['synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 'synthetic_log_bc1c2','bpic17', 'bpic15']
+datalabsel_list = ['bpic17','synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 'synthetic_log_bc1c2', 'bpic15']
 
 # classifier = 'htc'
 # counter = 200
-performance_measure = 'WeightedF1'
-for counter in [50,100,200]:
+performance_measure = 'ROCAUC'
+for counter in [50, 100, 200]:
     for classifier in ['htc', 'hatc', 'efdt']:
 
         for datalabel in datalabsel_list:
@@ -29,9 +29,9 @@ for counter in [50,100,200]:
             for pos, x in enumerate(e):
                 normal = True
                 if pos ==0:
-                    acc_mean_list.append(x)
+                    acc_mean_list.append(0)
                     acc_std_list.append(0)
-                
+                    
                 else:
                     acc_mean = np.mean(acc_interval)
                     acc_std = np.std(acc_interval)
@@ -42,7 +42,8 @@ for counter in [50,100,200]:
                 new_observation.append(x)
                 normality.append(normal)
 
-                acc_interval.append(x)
+                if pos !=0:
+                    acc_interval.append(x)
                 if len(acc_interval) >counter:
                     acc_interval.popleft()
 
@@ -62,19 +63,15 @@ for counter in [50,100,200]:
             for t in data.keys():
 
                 if 'prefix_' in t:
-
                     df.loc[:,t] = data[t]
 
             end_signal = len(df)
-            df.loc[end_signal, 'Time'] = time[-1] + pd.Timedelta(minutes=1)
-            df.loc[end_signal, 'Normality'] = True
             
             try:
                 os.makedirs('./img/%s/%s/%s'%(datalabel, classifier, performance_measure))
             except:
                 pass
             
-            print(df.head)
 
             df.to_csv('./img/%s/%s/%s %s result%s.csv'%(datalabel, classifier, classifier, performance_measure, counter), index=False)
 
