@@ -8,7 +8,7 @@ datalabsel_list = ['bpic17','synthetic_log_b', 'synthetic_log_bc1', 'synthetic_l
 
 # classifier = 'htc'
 # counter = 200
-performance_measure = 'ROCAUC'
+performance_measure = 'WeightedF1'
 for counter in [50, 100, 200]:
     for classifier in ['htc', 'hatc', 'efdt']:
 
@@ -35,7 +35,10 @@ for counter in [50, 100, 200]:
                 else:
                     acc_mean = np.mean(acc_interval)
                     acc_std = np.std(acc_interval)
-                    if x > acc_mean+acc_std or x < acc_mean-acc_std:
+
+                    # if x > acc_mean+acc_std or x < acc_mean-acc_std: !! Above upper bound and below lower bound
+
+                    if x < acc_mean-acc_std: # Only below lower bound
                         normal = False
                     acc_mean_list.append(acc_mean)
                     acc_std_list.append(acc_std)
