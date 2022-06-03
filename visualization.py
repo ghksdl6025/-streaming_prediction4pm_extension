@@ -5,14 +5,14 @@ from matplotlib.pyplot import figure
 import pandas as pd
 
 # datalabsel_list = ['synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 'synthetic_log_bc1c2', 'bpic17', 'bpic15']
-datalabsel_list = ['bpic15']#, 'synthetic_log_bc1']
-performance_measure = 'ROCAUC'
+datalabsel_list = ['synthetic_log_bc1c2']#, 'synthetic_log_bc1']
+performance_measure = 'Accuracy'
 
 # classifier = 'htc'
 # counter = 200
-figure(figsize=(12,8,))
+figure(figsize=(12,4,))
 
-for counter in [50,100,200]:
+for counter in [200]:
     for classifier in ['htc','hatc','efdt']:
         for datalabel in datalabsel_list:
 
@@ -31,10 +31,10 @@ for counter in [50,100,200]:
             plt.plot(x_list, df['Acc mean'], label='Accuracy Mean')
             plt.fill_between(x_list,df['Acc mean']-df['Acc std'],df['Acc mean']+df['Acc std'],alpha=.3, label = 'Acc mean $\pm$ Std')
 
-            # plt.axvline(x=293, color='grey', linestyle='--', label='Concept drift')
-            # plt.text(x=295, y=0.01, s='293', fontsize= 13)
-            # plt.axvline(x=793, color='grey', linestyle='--', label='Concept drift')
-            # plt.text(x=795, y=0.01, s='793', fontsize= 13)
+            plt.axvline(x=293, color='grey', linestyle='--', label='Concept drift')
+            plt.text(x=295, y=0.01, s='293', fontsize= 13)
+            plt.axvline(x=793, color='grey', linestyle='--', label='Concept drift')
+            plt.text(x=795, y=0.01, s='793', fontsize= 13)
 
             plt.plot(x_outliers, y_outliers, 'ro', label = 'Outlier')
             plt.legend()
@@ -50,7 +50,7 @@ for counter in [50,100,200]:
 
             if performance_measure =='AUC':
                 performance_measure ='ROCAUC'
-            plt.savefig('./img/%s/%s/%s %s result%s.png'%(datalabel, classifier, classifier, performance_measure,counter))
+            plt.savefig('./img/%s/%s/%s %s result%s.pdf'%(datalabel, classifier, classifier, performance_measure,counter))
 
             plt.cla()
             plt.clf()
