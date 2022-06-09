@@ -8,7 +8,7 @@ from sympy import sec
 
 resultdict = {}
 
-performance_measure = 'ROCAUC'
+performance_measure = 'F1'
 
 for x in ['Dataset','Classifier','Window size', 'Frequency of drop','Average recovery speed', 'Normalized recovery speed',
         'Max performance drop','Average performance drop','Stability of performance']:
@@ -70,8 +70,16 @@ for counter in [50,200]:
             # print('Average performance drop: ', avg_gap)
             # print('Stability of performance: ', stability_of_performance)
 
+            change_datasetname = {
+                'bpic15': 'BPIC 2015_1', 
+                'bpic17': 'BPIC 2017',
+                'synthetic_log_b': 'IRO5K Baseline',
+                'synthetic_log_bc1': 'IRO5K Drift 1',
+                'synthetic_log_bc2': 'IRO5K Drift 2',
+                'synthetic_log_bc1c2': 'IRO5K Drift 3'
+            }
 
-            resultdict['Dataset'].append(datalabel)
+            resultdict['Dataset'].append(change_datasetname[datalabel])
             resultdict['Classifier'].append(classifier)
             resultdict['Window size'].append(counter)
             resultdict['Frequency of drop'].append(round(false_counter/len(list(df['Normality'])),2))
@@ -93,5 +101,7 @@ try:
 except:
     pass
 
+if performance_measure =='ROCAUC':
+    performance_measure = 'AUC'
 df.to_csv('./metrics/%s evaluation metrics.csv'%(performance_measure),index=False)
 

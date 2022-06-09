@@ -8,8 +8,8 @@ datalabsel_list = ['bpic17','synthetic_log_b', 'synthetic_log_bc1', 'synthetic_l
 
 # classifier = 'htc'
 # counter = 200
-performance_measure = 'WeightedF1'
-for counter in [50, 100, 200]:
+performance_measure = 'F1'
+for counter in [50, 200]:
     for classifier in ['htc', 'hatc', 'efdt']:
 
         for datalabel in datalabsel_list:

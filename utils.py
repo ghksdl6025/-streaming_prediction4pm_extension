@@ -419,6 +419,7 @@ def rt_case_continuous_evaluation(resultdict, bin_n):
 
 
 from sklearn import metrics
+import warnings
 
 class window_evaluation:
     def __init__(self, window_size,type='Accuracy'):
@@ -441,7 +442,9 @@ class window_evaluation:
         if type =='Accuracy':
             value = metrics.accuracy_score(yt_list, yp_list)
         elif type =='F1':
-            value = metrics.f1_score(yt_list, yp_list)
+            value = metrics.f1_score(yt_list, yp_list, average='macro')
+            warnings.filterwarnings("ignore")
+
         elif type =='ROCAUC':
 
             try:
