@@ -9,11 +9,12 @@ datalabsel_list = ['synthetic_log_b', 'synthetic_log_bc1', 'synthetic_log_bc2', 
 # classifier = 'htc'
 # counter = 200
 
-performance_measure = 'WeightedF1'
-for counter in [50,100,200]:
+performance_measure = 'Accuracy'
+for counter in [50,200]:
     for classifier in ['htc', 'hatc', 'efdt']:
 
         for datalabel in datalabsel_list:
+            print(datalabel, counter, classifier)
             with open('./result/%s/%s %s window 50 window_%s.pkl'%(datalabel, datalabel, classifier, performance_measure) ,'rb') as result_file:
                 data = pkl.load(result_file)
 
@@ -40,8 +41,9 @@ for counter in [50,100,200]:
                         acc_std_list.append(0)
                     
                     else:
-                        acc_mean = np.mean(acc_interval)
-                        acc_std = np.std(acc_interval)
+                        acc_interval1 = [y for y in acc_interval if ~np.isnan(y)]
+                        acc_mean = np.mean(acc_interval1)
+                        acc_std = np.std(acc_interval1)
                         if x > acc_mean+acc_std or x < acc_mean-acc_std:
                             normal = False
                         acc_mean_list.append(acc_mean)
