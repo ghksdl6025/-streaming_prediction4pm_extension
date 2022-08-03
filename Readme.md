@@ -1,5 +1,10 @@
 # Continuous performance evaluation for business process outcome monitoring
 
+## Suhwan Lee<sup>a</sup>, Marco Comuzzi<sup>b</sup>, and Xixi Lu<sup>a</sup>
+
+<sup>a</sup>Utrecht University
+<sup>b</sup>Ulsan National Institute of Science and Technology
+
 ## General framework
 <p align="center">
     <img src="./img/general_framework_a-1.png">
@@ -30,17 +35,25 @@ First of all, the labels received are only used to train the models in the frame
 #### 1) Frequency of significant performance drop
 _“How often the model performance significantly deviated from (below) the moving average?”_
 
-<img src="https://render.githubusercontent.com/render/math?math=F = \frac{\sum_{D_i \in \mathbb{D}(\theta)} \rvert D_i\lvert}{\rvert \theta \lvert}">
+The evaluation metric captures the rate at which the performance of an online predictive model drops below a certain level considered acceptable.
 
-<img src="https://render.githubusercontent.com/render/math?math={\color{white}F = \frac{\sum_{D_i \in \mathbb{D}(\theta)} \rvert D_i\lvert}{\rvert \theta \lvert}#gh-dark-mode-only">
+#### 2) Stability of the performance
+_"How volatile are the performance values of the prediction framework?"_
 
-#### b) Continuous evaluation by case duration
-_"How likely is the framework to output a correct prediction when x% of its duration has elapsed?"_
+The evaluation metric captures the stability over time of the performance of an online predictive model.
 
-This type of evaluation is similar to the previous one, however, in this case the progress of a case is identified by the time elapsed since the beginning of it.
+#### 3) Magnitude of performance drop
 
-### 2) Real-time model performance
-_“How likely are the most recentprediction(s) obtained from a model to be eventually correct?”_
+_“How much is the absolute value of deviated performance of the framework?”_
 
- In the real-time method we first define w as the size of a test window containing the traces associated with the latest W labels <img src="https://render.githubusercontent.com/render/math?math=y_w"> that have been received. Then consider the  average of the performance across all the predictions available, at any prefix length, for each trace in this window.
+The evaluation metric captures how much the perfor-
+mance of a model normally drops from its expected acceptable level.
+
+#### 4) Recovery rate
+
+_“How quickly can the model be recovered from a sudden change in the prediction ability?”_
+
+The evaluation metric measures the speed at which an online model normally recovers from a performance drop.
+
+
 
