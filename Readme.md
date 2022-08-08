@@ -26,7 +26,7 @@ First of all, the labels received are only used to train the models in the frame
 ### Moving windows and predictive framework
 
 <p align="center">
-    <img src="./img/exampleApproachUnfolded-1.png">
+    <img src="./img/exampleApproachUnfolded.png">
     <br>
     <em>2) Updating the moving window of predictions across model updates</em>
 </p>
